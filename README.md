@@ -56,21 +56,71 @@ Responsibilities:
 
 ## Technology Stack
 ### Backend & API
-1. Django: A high-level functional Python framework for rapid deployment, handling routing, middleware, and business logic.
+1. **Django**: A high-level functional Python framework for rapid deployment, handling routing, middleware, and business logic.
 
-2. Django REST Framework (DRF): Extends Django to build RESTful APIs with features like serializers, authentication, and throttling.
+2. **Django REST Framework (DRF)**: Extends Django to build RESTful APIs with features like serializers, authentication, and throttling.
 
-3. GraphQL: Alternative to REST for flexible queries (e.g., fetching nested booking/user data in a single request).
+3. **GraphQL**: Alternative to REST for flexible queries (e.g., fetching nested booking/user data in a single request).
 
 ### Database & Caching
-1. PostgreSQL: Relational database for structured data (users, listings, bookings) with ACID compliance.
+1. **PostgreSQL**: Relational database for structured data (users, listings, bookings) with ACID compliance.
 
-2. Redis: In-memory cache for high-speed access to frequently queried data (e.g., search results, session storage).
+2. **Redis**: In-memory cache for high-speed access to frequently queried data (e.g., search results, session storage).
 
 ### Asynchronous Tasks
-1. Celery: Handles background jobs (e.g., sending confirmation emails, cleaning up expired bookings) with Redis/RabbitMQ as a broker.
+1. **Celery**: Handles background jobs (e.g., sending confirmation emails, cleaning up expired bookings) with Redis/RabbitMQ as a broker.
 
 ### Deployment & Infrastructure
-1. Docker: Containerization for consistent environments (dev, staging, production).
+1. **Docker**: Containerization for consistent environments (dev, staging, production).
 
-2. CI/CD Pipelines: Automated testing/deployment (e.g., GitHub Actions/GitLab CI) to ensure code quality and streamline releases.
+2. **CI/CD Pipelines**: Automated testing/deployment (e.g., GitHub Actions/GitLab CI) to ensure code quality and streamline releases.
+
+## Database Design
+
+### Key Entities & Relationships
+**Users**
+
+**Fields**: id, email, password_hash, first_name, last_name, role (host/guest)
+
+**Relationships**:
+
+- One-to-Many with Properties (A user can list multiple properties)
+- One-to-Many with Bookings (A user can make multiple bookings)
+- One-to-Many with Reviews (A user can write multiple reviews)
+
+### Properties
+
+**Fields**: id, title, description, price_per_night, location, host_id (FK to Users)
+
+**Relationships**:
+
+- Many-to-One with Users (Each property belongs to one host)
+- One-to-Many with Bookings (A property can have multiple bookings)
+- One-to-Many with Reviews (A property can receive multiple reviews)
+
+### Bookings
+
+**Fields**: id, start_date, end_date, total_price, status (confirmed/pending/cancelled), guest_id (FK to Users), property_id (FK to Properties)
+
+**Relationships**:
+
+- Many-to-One with Users (A booking is made by one guest)
+- Many-to-One with Properties (A booking is for one property)
+- One-to-One with Payments (Each booking has one payment)
+
+### Reviews
+
+**Fields**: id, rating, comment, created_at, guest_id (FK to Users), property_id (FK to Properties)
+
+**Relationships**:
+
+- Many-to-One with Users (A review is written by one user)
+- Many-to-One with Properties (A review is for one property)
+
+### Payments
+
+**Fields**: id, amount, payment_method, transaction_id, status, booking_id (FK to Bookings)
+
+**Relationships**:
+
+- One-to-One with Bookings (A payment is linked to one booking)
