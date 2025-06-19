@@ -213,3 +213,43 @@ Multiple layers of protection are provided to guard the platform and users:
 | Reviews   | Spam, fake reviews, reputation attacks |    Ensures authentic community feedback |
 
 Regular penetration testing will be conducted as part of the project's CI/CD pipeline
+
+## CI/CD Pipeline
+
+Continuous Integration (CI) and Continuous Deployment (CD) automate the process of testing, building, and deploying code changes. This ensures rapid, reliable updates to the production environment while maintaining stability.
+
+### Importance for This Project:
+1. **Quality Control**: Automated testing catches bugs before they reach production
+
+2. **Developer Efficiency**: Enables frequent, small updates instead of risky bulk deployments
+
+3. **Consistency**: Eliminates "works on my machine" issues via containerized environments
+
+4. **Security**: Scans for vulnerabilities in dependencies and code during every push
+
+### The Pipeline Stages:
+1. **Test**:
+    - Run unit/integration tests (Python + Jest)
+    - Security scans (Bandit, npm audit)
+    - Linting (ESLint, Flake8)
+
+2. **Build**:
+    - Create Docker images for backend services
+    - Bundle frontend assets
+    - Generate API documentation
+
+3. **Deploy**:
+    - Push to staging environment for manual validation
+    - Automated production rollout (after approval)
+    - Database migrations (with rollback safety)
+
+### Tools To Use:
+1. **GitHub Actions**: For workflow automation (triggers on PRs/main branch)
+2. **Docker**: Containerization for consistent environments
+3. **AWS ECS/ECR**: Cloud deployment, Container orchestration and registry
+4. **PostgreSQL**: Managed database migrations
+
+### To setup GitHub Actions:
+- Create .github/workflows/deploy.yml in the root folder of the project
+- Configure AWS credentials as GitHub secrets, each credential in a separate secret
+- Set up environment-specific variables
