@@ -161,3 +161,55 @@ Responsibilities:
 **Implementation**: PostgreSQL query optimization (indexing), Redis caching for frequent queries, and connection pooling
 
 **Purpose**: Ensures scalability and performance under load, particularly for search and booking operations
+
+## API Security
+
+Multiple layers of protection are provided to guard the platform and users:
+
+### Key Security Measures
+1. **Authentication**
+
+- JWT (JSON Web Tokens) with short-lived access tokens and refresh tokens
+- Secure cookie storage for web clients
+- Password hashing using bcrypt
+
+2. **Authorization**
+
+- Role-based access control (RBAC) for users/hosts/admins
+- Property ownership verification for all mutating operations
+- Django permissions framework for endpoint-level controls
+
+3. **Rate Limiting**
+
+- Redis-backed throttling (DRF's AnonRateThrottle/UserRateThrottle)
+- 100 requests/minute for authenticated users
+- 20 requests/minute for anonymous users
+
+4. **Data Protection**
+
+- All sensitive fields (emails, payments) encrypted at rest
+- PostgreSQL column-level encryption for PII
+- Regular security audits with bandit and safety checks
+
+5. **Payment Security**
+
+- PCI-compliant Stripe integration (no raw card data touches our servers)
+- Webhook signature verification
+- Dual approval for refunds over $500
+
+6. **API Hardening**
+
+- CSRF protection for web endpoints
+- CORS restrictions to trusted domains only
+- SQL injection prevention via Django ORM
+- XSS protection via DRF's template rendering
+
+| Area |  Risks Mitigated  | Business Impact |
+|:-----|:--------:|------:|
+| User Accounts   | Credential stuffing, account takeovers | Protects user trust and platform integrity |
+| Property Data   |  Unauthorized modifications, data leaks  |   Maintains host confidence in the platform |
+| Booking System   | Inventory denial, fake reservations |    Prevents revenue loss and system abuse |
+| Payments   | Fraud, chargebacks, theft |    Avoids financial losses and legal issues |
+| Reviews   | Spam, fake reviews, reputation attacks |    Ensures authentic community feedback |
+
+Regular penetration testing will be conducted as part of the project's CI/CD pipeline
