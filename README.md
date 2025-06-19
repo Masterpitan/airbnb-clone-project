@@ -124,3 +124,40 @@ Responsibilities:
 **Relationships**:
 
 - One-to-One with Bookings (A payment is linked to one booking)
+
+## Feature Breakdown
+
+### 1. **API Documentation**
+**Implementation**: OpenAPI standard documentation auto-generated using Django REST framework and Graphene (GraphQL)
+
+**Purpose**: Provides comprehensive, interactive API docs for both REST and GraphQL endpoints, enabling seamless frontend integration and developer onboarding
+
+### 2. **User Authentication**
+**Implementation**: OpenAPI keys and OAUth, including email verification and password reset flows
+
+**Purpose**: Secures all API endpoints while supporting modern auth patterns (social login ready via OAuth2)
+
+### 3. **Property Management**
+**Implementation**: CRUD operations with Django ORM, featuring geospatial search (PostGIS), image uploads (AWS S3), and rich text descriptions
+
+**Purpose**: Core functionality for hosts to create and manage listings with all necessary metadata
+
+### 4. **Booking System**
+**Implementation**: Date-range validation logic, availability calendar, and pricing calculation (base rate + cleaning fees)
+
+**Purpose**: Handles the complete reservation lifecycle from inquiry to confirmation with conflict prevention
+
+### 5. **Payment Processing**
+**Implementation**: Stripe integration for secure card payments with webhook handling for asynchronous payment status updates
+
+**Purpose**: PCI-compliant transaction processing supporting holds, refunds, and platform commission
+
+### 6. **Review System**
+**Implementation**: Rating validation (1-5 stars), optional text reviews, and host responses with moderation capabilities
+
+**Purpose**: Builds trust through verified guest feedback and public host responses
+
+### 7. **Database Optimisation**
+**Implementation**: PostgreSQL query optimization (indexing), Redis caching for frequent queries, and connection pooling
+
+**Purpose**: Ensures scalability and performance under load, particularly for search and booking operations
